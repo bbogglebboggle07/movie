@@ -271,21 +271,17 @@ elif st.session_state["page"] == 'movie_detail' and st.session_state.selected_mo
                     selected_stars_index = st.feedback("stars", key=f"feedback_stars_{movie_id}") 
                     review_text_input = st.text_area("리뷰 내용", help="영화에 대한 자세한 감상을 작성해주세요.", key=f"review_text_area_{movie_id}")
                     watch_date_input = st.date_input("영화를 본 날짜 (선택 사항)", datetime.now().date(), help="이 영화를 언제 보셨나요?", key=f"watch_date_input_{movie_id}")
-                    submit_button = st.form_submit_button("리뷰 제출", key=f"submit_review_button_{movie_id}")
+    
+    # 이 부분에서 'key=f"submit_review_button_{movie_id}"'를 삭제합니다.
+                    submit_button = st.form_submit_button("리뷰 제출") 
 
                     if submit_button:
                         if selected_stars_index is None:
-                            st.warning("별점을 선택해주세요!")
+                                st.warning("별점을 선택해주세요!")
                         else:
                             rating_value = selected_stars_index + 1
                             if add_review_to_db(movie_id, rating_value, review_text_input, watch_date_input.strftime('%Y-%m-%d')):
                                 st.rerun()
-
-            else:
-                st.error("선택된 영화를 찾을 수 없습니다. 홈으로 돌아갑니다.")
-                #st.session_state["page"] = 'home'
-                #st.rerun()
-
         except sqlite3.Error as err:
             st.error(f"영화 상세 정보를 불러오는 중 오류 발생: {err}")
         finally:
